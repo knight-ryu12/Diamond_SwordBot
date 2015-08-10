@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.net.*;
 
+import org.pircbotx.Channel;
+
 //import java.util.*;
 //import javax.mail.*;
 //import javax.mail.internet.*;
@@ -15,6 +17,7 @@ import java.net.*;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
+import org.pircbotx.UserLevel;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.types.GenericCTCPEvent;
@@ -40,6 +43,7 @@ public class Diamond extends ListenerAdapter {
         return randomNum;
 	}*/
         @Override
+        
         public void onMessage(MessageEvent event) throws Exception{
         	 //When someone says ?helloworld respond with "Hello World"
         	
@@ -236,7 +240,7 @@ public class Diamond extends ListenerAdapter {
                 	String Sender = event.getUser().getNick();
                	//event.respond(senderhost);
                 	
-                	if (senderhost.equals("j220156139067.nct9.ne.jp" ) || senderhost.equals("knight.ryu.bouncer.epickitty.uk")){
+                	if (senderhost.equals("j220156139067.nct9.ne.jp" ) || senderhost.equals("icysword.ml")){
                 			event.respond("Hey Owner! <3");
                 		} else if (senderhost.equals("epickitty.uk")){
                 			event.getChannel().send().message("woooo EpicKitty :D How are you?");
@@ -274,10 +278,19 @@ public class Diamond extends ListenerAdapter {
                 }
                 if(event.getMessage().equalsIgnoreCase("?randomuser")){
                     ArrayList<User> users = new ArrayList<User>();
-                    for(User user : event.getChannel().getUsers().asList()) users.add(user);
+                    for(User user : event.getChannel().getUsers().asList()) users.add(user); //event.getChannel().send().message(users.toString());
+                    
                     Random rand = new Random();
                     int randomNum = rand.nextInt((users.size() - 0) + 1) + 0;
                     event.respond(users.get(randomNum).getNick());
+                }
+                if(event.getMessage().startsWith("?status")){
+                	String sender = event.getUser().getNick();
+                	String Hostmask = event.getUser().getHostmask();
+                	String AwayMessage = event.getUser().getAwayMessage();
+                	String login = event.getUser().getLogin();
+                	
+                	
                 }
                 if(event.getMessage().equalsIgnoreCase("?easter1")){
                 	ArrayList<User> users = new ArrayList<User>();
@@ -321,12 +334,22 @@ public class Diamond extends ListenerAdapter {
                 }
                 if(event.getMessage().equalsIgnoreCase("?isOP")){
                 	ArrayList<User> users = new ArrayList<User>();
-                //users.add(event.getChannel().getOps());
-                	//users.
-                	//String sender = event.getUser().getNick();
-                	//boolean isOP = event.getChannel().
-                	//event.getChannel().send().message("I think you are OP in channel")
+                	String sender = event.getUser().getNick();
+                	for(User OP : event.getChannel().getOps()){
+                		users.add(OP);
+                		
+                		event.getChannel().send().message(OP.toString());
+                	}
+                	event.getChannel().send().message(sender);
+                	/*boolean opuser = 
+                	if(opuser == true) {
+                		event.getChannel().send().message("You have OP!");
+                	} else {
+                		event.getChannel().send().message("You don't have OP. yet.");
+                	}*/
+                	
                 }
+                
                 if(event.getMessage().equalsIgnoreCase("?rr")){
                 	int num = (int)(Math.random() * 6);
                 	String act = rrmsg[num];
@@ -360,7 +383,7 @@ public class Diamond extends ListenerAdapter {
                 	event.respond("Shutdown bot....");
                 	System.exit(0);
                 	} else {
-                		event.respond("Well, You don't have permission to stop this bot.\n" + "Nice Try.");
+                		event.getChannel().send().message("Well, You don't have permission to stop this bot.\n" + "Nice Try.");
                 	}
                 	
                 }
